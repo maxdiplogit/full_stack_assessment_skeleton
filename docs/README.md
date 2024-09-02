@@ -129,7 +129,19 @@ docker-compose -f docker-compose.initial.yml up --build -d
 
 ### solution
 
-> explain briefly your solution for this problem here
+> As stated in the task, the first step was to separate both `users` and `homes` in separate tables in order to maintain data integrity and 
+  avoiding data redundancy, and hence achieving Data Normalization. `users` and `homes` have a many-to-many relationship between them, so we
+  create another table named as `user_home_rel` which will contain all the relations between `users` and `homes` entities. This structure not
+  only Normalizes the database, but also supports efficient queries, reduce update anomalies and facilitate scalability.
+
+> The `99_final_db_dump.sql` file includes the SQL script which will make the desired changes to the dockerized MySQL database. This SQL 
+  script takes the DB from the initial state that its already in, to the desired Normalized state. Whenever this script is run, it will 
+  re-initialize the desired form of the database (without modifications from update or delete queries), maintaining the original data's
+  integrity.
+
+> To get the Normalized form from the original database, you have to follow these steps:
+>   - Stop the previously running docker MySQL DB container if already running by doing: `docker-compose -f docker-compose.initial.yml down`
+>   - Now to get the desired changes in the Containerized MySQL DB, run: `docker-compose -f docker-compose.final.yml up --build -d`
 
 ## 2. React SPA
 
@@ -220,7 +232,32 @@ docker-compose -f docker-compose.initial.yml up --build -d
 
 ### solution
 
-> explain briefly your solution for this problem here
+> So I have used `Vite` for creating a react application, because `CRA` is a bit older and slower than `Vite`. Plus I have seen most of the 
+  open source companies using `Vite` for their React applications.
+
+> I have used `Tailwind CSS` for designing purposes. The design of this site is minimal and satisfies the criteria as described in the video 
+  provided for the SPA React App. I have used `Tailwind CSS` instead of normal `Vanilla CSS` because its faster to design using `Tailwind` and
+  I don't have to deal with adding a lot of boilerplate CSS.
+
+> For component-wide state management for my SPA React app, I have used `@reduxjs/toolkit`. The reason for using this Toolkit was that not only
+  it provides us with component-wide state management, but also comes with a feature known as `RTK Query`, which can be used to perform side-effects in a React Application, such as fetching data and making CRUD API calls as well. It also supports Data Caching,
+  Synchronization, and it also automatically generates hooks for that, which can be called in our components without using `useEffect()` like
+  we normally do for side-effects in a React application. It also provides us with different states of fetching like `loading`, `error`,
+  `isSuccess`, `data`, etc. which makes it really convenient for a developer to handle all these states by rendering required UI based on 
+  these states.
+
+> For showing whether an API request is being made to the backend, I have been inspired from spinners provided on `Tailwind`'s site and created
+  one. I did not use `react-loading-skeleton` because I was not able to get that working and I did not want to waste time so I went ahead with
+  simple `Tailwind` spinners. Resource: [Tailwind Spinners](https://tailwindcss.com/docs/animation#spin)
+
+> I have also implemented Pagination in my SPA React UI. Each page will have 50 home records and on each page change, a call to the backend 
+  will be made for that particular page, hence reducing load on the backend, the bulk that was being returned before by the API is reduced.
+  For Pagination, I have again used inspiration from `Tailwind`'s site. Resource: [Tailwind Pagination](https://tailwindui.com/components/application-ui/navigation/pagination)
+
+> In order to get the frontend working, follow these steps:
+>   - Go into the frontend directory: `cd frontend`
+>   - Then install the dependencies: `npm i`
+>   - Then run the frontend: `npm run dev`
 
 ## 3. Backend API development on Node
 
@@ -281,7 +318,24 @@ docker-compose -f docker-compose.initial.yml up --build -d
 
 ### solution
 
-> explain briefly your solution for this problem here
+> For backend, I have used the `Express` framework. The reason for using express was because its easier to setup and build fast. But from 
+  a maintenance and scalability perspective, I would have gone with the `NestJS` framework. I also have some storage issues and when I tried 
+  setting up a NestJS server, my machine ran out of storage, that's also a reason that I went on with `Express` lightweight framework.
+
+> For interacting with the database, I have used the recommended ORM: `TypeORM`. I used this because its easier to setup in an Express backend
+  and also a very intuitive and easy to understand behavior of its that made me use `TypeORM`.
+
+> Implemented the REST APIs as described in the `task` section. Added pagination for the route `/home/find-by-user`. Made sure that the route
+  `/home/update-users` is idempotent by having the required checks in place so that no duplicate insert or delete operations are done in the 
+  database. From a sanitization perspective, I have only done Data Validation on the frontend and backend, but some more functionality can be
+  added such as checking for SQL Injection, XSS attacks etc.
+
+> To get the backend working, follow these steps:
+>   - Go into the backend directory: `cd backend`
+>   - Install the dependencies: `npm i`
+>   - Run the backend: `npm run dev`
+>   - Change the environment variables if required in the `.env` file. (Pushed into repo because its being used in backend code)
+>   - I have also added backend tests built using `Jest` framework. In order to run these tests, run: `npm run test`
 
 ## Submission Guidelines
 
